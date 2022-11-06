@@ -176,7 +176,7 @@ class Front_to_back extends Module implements PrestaShop\PrestaShop\Core\Module\
     {
         $cookie = new Cookie('psAdmin', '', (int) Configuration::get('PS_COOKIE_LIFETIME_BO'));
         $token = Tools::getAdminToken('AdminProducts' . (int) Tab::getIdFromClassName('AdminProducts') . $cookie->id_employee);
-        $productLink = _PS_BASE_URL_ . __PS_BASE_URI__ . Configuration::get('FRONTTOBACKDIRECTORBACK', null);
+        $productLink = Tools::getHttpHost(true). __PS_BASE_URI__. Configuration::get('FRONTTOBACKDIRECTORBACK', null);
         $productLink .= '/index.php?controller=AdminProducts';
         $productLink .= '&token=' . $token;
         $productLink .= '&id_product=' . (int) Tools::getvalue('id_product');
