@@ -36,6 +36,7 @@ class Front_to_back extends Module implements PrestaShop\PrestaShop\Core\Module\
         $this->version = '1.0.0';
         $this->author = 'Fabio Perrone';
         $this->need_instance = 0;
+        $this->module_key = '98bed74fff093794de3c17278b471921';
 
         /*
         * Set $this->bootstrap to true if your module is compliant with bootstrap ( PrestaShop 1.6 )
