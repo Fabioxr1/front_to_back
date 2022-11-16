@@ -23,16 +23,14 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License ( AFL 3.0 )
 *  International Registered Trademark & Property of PrestaShop SA
 */
-if (!defined('_PS_VERSION_')) {
+if ( !defined( '_PS_VERSION_' ) ) {
     exit;
 }
 
-class Front_to_back extends Module implements PrestaShop\PrestaShop\Core\Module\WidgetInterface
-{
+class Front_to_back extends Module implements PrestaShop\PrestaShop\Core\Module\WidgetInterface {
     protected $config_form = false;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->name = 'front_to_back';
         $this->tab = 'front_office_features';
         $this->version = '1.0.0';
@@ -46,58 +44,59 @@ class Front_to_back extends Module implements PrestaShop\PrestaShop\Core\Module\
 
         parent::__construct();
 
-        $this->displayName = $this->l('Front To Back Link');
-        $this->description = $this->l('This module add a button for direct access to the product modification page in Backoffice');
+        $this->displayName = $this->l( 'Front To Back Link' );
+        $this->description = $this->l( 'This module add a button for direct access to the product modification page in Backoffice' );
 
-        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = [ 'min' => '1.7', 'max' => _PS_VERSION_ ];
     }
 
-    public function install()
-    {
+    public function install() {
         return parent::install() &&
-        $this->registerHook('header') &&
+        $this->registerHook( 'header' ) &&
         // $this->registerHook( 'backOfficeHeader' ) &&
-        $this->registerHook('displayNav2');
+        $this->registerHook( 'displayNav2' );
     }
 
-    public function uninstall()
-    {
-        Configuration::deleteByName('FRONTTOBACKDIRECTORBACK');
+    public function uninstall() {
+        Configuration::deleteByName( 'FRONTTOBACKDIRECTORBACK' );
 
         return parent::uninstall();
     }
 
-    public function getContent()
-    {
+    public function getContent() {
         /*
         * If values have been submitted in the form, process.
         */
-        if (((bool) Tools::isSubmit('submitFrontToBackModule')) == true) {
+        $confirm = '';
+        if ( ( ( bool ) Tools::isSubmit( 'submitFrontToBackModule' ) ) == true ) {
             $this->postProcess();
+            $confirm =   $this->displayConfirmation( $this->l( 'Settings updated' ) );
         }
 
-        $this->context->smarty->assign('module_dir', $this->_path);
+        $this->context->smarty->assign( array(
+            'module_dir' => $this->_path,
+            'confirm' => $confirm
+        ) );
 
-        $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
+        $output = $this->context->smarty->fetch( $this->local_path . 'views/templates/admin/configure.tpl' );
 
         return $output . $this->renderForm();
     }
 
-    protected function renderForm()
-    {
+    protected function renderForm() {
         $helper = new HelperForm();
 
         $helper->show_toolbar = false;
         $helper->table = $this->table;
         $helper->module = $this;
         $helper->default_form_language = $this->context->language->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
+        $helper->allow_employee_form_lang = Configuration::get( 'PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0 );
 
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitFrontToBackModule';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
+        $helper->currentIndex = $this->context->link->getAdminLink( 'AdminModules', false )
         . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->token = Tools::getAdminTokenLite( 'AdminModules' );
 
         $helper->tpl_vars = [
             'fields_value' => $this->getConfigFormValues(), /* Add values for your inputs */
@@ -105,15 +104,14 @@ class Front_to_back extends Module implements PrestaShop\PrestaShop\Core\Module\
             'id_language' => $this->context->language->id,
         ];
 
-        return $helper->generateForm([$this->getConfigForm()]);
+        return $helper->generateForm( [ $this->getConfigForm() ] );
     }
 
-    protected function getConfigForm()
-    {
+    protected function getConfigForm() {
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Settings'),
+                    'title' => $this->l( 'Settings' ),
                     'icon' => 'icon-cogs',
                 ],
                 'input' => [
@@ -121,83 +119,78 @@ class Front_to_back extends Module implements PrestaShop\PrestaShop\Core\Module\
                         'col' => 6,
                         'type' => 'text',
                         'prefix' => '<i class="icon icon-chevron-sign-right"></i>',
-                        'desc' => $this->l('Enter Name Directory Backoffice'),
+                        'desc' => $this->l( 'Enter Name Directory Backoffice' ),
                         'name' => 'FRONTTOBACKDIRECTORBACK',
-                        'label' => $this->l('You Directory Backoffice'),
+                        'label' => $this->l( 'You Directory Backoffice' ),
                     ],
                 ],
                 'submit' => [
-                    'title' => $this->l('Save'),
+                    'title' => $this->l( 'Save' ),
                 ],
             ],
         ];
     }
 
-    protected function getConfigFormValues()
-    {
+    protected function getConfigFormValues() {
         return [
-            'FRONTTOBACKDIRECTORBACK' => Configuration::get('FRONTTOBACKDIRECTORBACK', null),
+            'FRONTTOBACKDIRECTORBACK' => Configuration::get( 'FRONTTOBACKDIRECTORBACK', null ),
         ];
     }
 
     /**
-     * Save form data.
-     */
-    protected function postProcess()
-    {
+    * Save form data.
+    */
+    protected function postProcess() {
+
         $form_values = $this->getConfigFormValues();
 
-        foreach (array_keys($form_values) as $key) {
-            Configuration::updateValue($key, Tools::getValue($key));
+        foreach ( array_keys( $form_values ) as $key ) {
+            Configuration::updateValue( $key, Tools::getValue( $key ) );
         }
     }
 
     /**
-     * Add the CSS & JavaScript files you want to be added on the FO.
-     */
-    public function hookHeader()
-    {
+    * Add the CSS & JavaScript files you want to be added on the FO.
+    */
+
+    public function hookHeader() {
         // $this->context->controller->addJS( $this->_path.'/views/js/front.js' );
-        $this->context->controller->addCSS($this->_path . '/views/css/front.css');
+        $this->context->controller->addCSS( $this->_path . '/views/css/front.css' );
     }
 
-    public function checkUserEmployee()
-    {
-        $cookie = new Cookie('psAdmin', '', (int) Configuration::get('PS_COOKIE_LIFETIME_BO'));
+    public function checkUserEmployee() {
+        $cookie = new Cookie( 'psAdmin', '', ( int ) Configuration::get( 'PS_COOKIE_LIFETIME_BO' ) );
 
-        if (isset($cookie->id_employee) && $cookie->id_employee) {
+        if ( isset( $cookie->id_employee ) && $cookie->id_employee ) {
             return true;
         } else {
             return false;
         }
     }
 
-    public function getLinkProductFrontToBack()
-    {
-        $cookie = new Cookie('psAdmin', '', (int) Configuration::get('PS_COOKIE_LIFETIME_BO'));
-        $token = Tools::getAdminToken('AdminProducts' . (int) Tab::getIdFromClassName('AdminProducts') . $cookie->id_employee);
-        $productLink = Tools::getHttpHost(true) . __PS_BASE_URI__ . Configuration::get('FRONTTOBACKDIRECTORBACK', null);
+    public function getLinkProductFrontToBack() {
+        $cookie = new Cookie( 'psAdmin', '', ( int ) Configuration::get( 'PS_COOKIE_LIFETIME_BO' ) );
+        $token = Tools::getAdminToken( 'AdminProducts' . ( int ) Tab::getIdFromClassName( 'AdminProducts' ) . $cookie->id_employee );
+        $productLink = Tools::getHttpHost( true ) . __PS_BASE_URI__ . Configuration::get( 'FRONTTOBACKDIRECTORBACK', null );
         $productLink .= '/index.php?controller=AdminProducts';
         $productLink .= '&token=' . $token;
-        $productLink .= '&id_product=' . (int) Tools::getvalue('id_product');
+        $productLink .= '&id_product=' . ( int ) Tools::getvalue( 'id_product' );
         $productLink .= '&updateproduct&key_tab=Images&action=Images';
 
         return $productLink;
     }
 
-    public function renderWidget($hookName, array $configuration)
-    {
-        if (!$this->checkUserEmployee()) {
+    public function renderWidget( $hookName, array $configuration ) {
+        if ( !$this->checkUserEmployee() ) {
             return;
         }
 
-        $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
+        $this->smarty->assign( $this->getWidgetVariables( $hookName, $configuration ) );
 
-        return $this->fetch('module:' . $this->name . '/views/templates/hook/display.tpl');
+        return $this->fetch( 'module:' . $this->name . '/views/templates/hook/display.tpl' );
     }
 
-    public function getWidgetVariables($hookName, array $configuration)
-    {
+    public function getWidgetVariables( $hookName, array $configuration ) {
         return [
             'linkBack' => $this->getLinkProductFrontToBack(),
         ];

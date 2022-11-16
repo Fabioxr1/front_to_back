@@ -35,3 +35,6 @@
 		{l s='This module will speed up your changes!' mod='front_to_back'}
 	</p>
 </div>
+{if isset($confirm)}
+	{$confirm}
+{/if}
