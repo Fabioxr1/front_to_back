@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-	<name>front_to_back</name>
+	<name>fronttoback</name>
 	<displayName><![CDATA[Front To Back Link]]></displayName>
 	<version><![CDATA[1.0.0]]></version>
 	<description><![CDATA[This module add a button for direct access to the product modification page in Backoffice]]></description>

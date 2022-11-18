@@ -15,7 +15,7 @@
 {if $page.page_name == 'product'}
     {nocache}
     <div class="front_to_back right-nav">
-        <a href="{$linkBack}">{l s='Edit Product' mod='front_to_back'}</a>
+        <a href="{$linkBack}">{l s='Edit Product' mod='fronttoback'}</a>
     </div>
     {/nocache}
 {/if}

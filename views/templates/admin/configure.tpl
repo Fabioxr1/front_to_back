@@ -24,15 +24,15 @@
 *}
 
 <div class="panel">
-	<h3><i class="icon icon-credit-card"></i> {l s='Quickly access the Backoffice' mod='front_to_back'}</h3>
+	<h3><i class="icon icon-credit-card"></i> {l s='Quickly access the Backoffice' mod='fronttoback'}</h3>
 	<p>
-		<strong>{l s='To create links, you need to enter the name of your backoffice directory!' mod='front_to_back'}</strong><br />
-		{l s='Add your secret Backoffice directory' mod='front_to_back'}<br />
-		{l s='It only serves to create the link To the Backoffice.' mod='front_to_back'}
+		<strong>{l s='To create links, you need to enter the name of your backoffice directory!' mod='fronttoback'}</strong><br />
+		{l s='Add your secret Backoffice directory' mod='fronttoback'}<br />
+		{l s='It only serves to create the link To the Backoffice.' mod='fronttoback'}
 	</p>
 	<br />
 	<p>
-		{l s='This module will speed up your changes!' mod='front_to_back'}
+		{l s='This module will speed up your changes!' mod='fronttoback'}
 	</p>
 </div>
 {if isset($confirm)}
